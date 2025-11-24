@@ -1,12 +1,15 @@
 const validator = require('../helpers/validate');
 
-const saveFriend = (req, res, next) => {
+const saveBook = (req, res, next) => {
   const validationRule = {
-    firstName: 'required|string',
-    lastName: 'required|string',
-    email: 'required|email',
-    favoriteColor: 'required|string',
-    birthday: 'string'
+    title: 'required|string',
+    author: 'required|string',
+    genre: 'required|string',
+    publishedYear: 'required|integer',
+    language: 'required|string',
+    pages: 'required|integer',
+    available: 'required|boolean',
+    summary: 'string'
   };
   validator(req.body, validationRule, {}, (err, status) => {
     if (!status) {
@@ -21,16 +24,13 @@ const saveFriend = (req, res, next) => {
   });
 };
 
-const saveStudent = (req, res, next) => {
+const saveAuthor = (req, res, next) => {
   const validationRule = {
-    firstName: 'required|string',
-    lastName: 'required|string',
-    email: 'required|email',
-    favoriteColor: 'required|string',
-    birthday: 'string',
-    age: 'required|integer',
-    gender: 'required|string',
-    grade_level: 'required|string'
+    name: 'required|string',
+    birthYear: 'required|integer',
+    nationality: 'required|string',
+    awards: 'array',
+    numBooksWritten: 'required|integer'
   };
   validator(req.body, validationRule, {}, (err, status) => {
     if (!status) {
@@ -44,8 +44,15 @@ const saveStudent = (req, res, next) => {
     }
   });
 };
+
+//Stores
+
+
+
+
+///Customers
 
 module.exports = {
-  saveFriend,
-  saveStudent
+  saveBook,
+  saveAuthor
 };

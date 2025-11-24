@@ -6,7 +6,7 @@ const getAll = async (req, res) => {
     mongodb
       .getDb()
       .db()
-      .collection('friends')
+      .collection('books')
       .find()
       .toArray((err, lists) => {
         //error handling
@@ -25,15 +25,15 @@ const getSingle = async (req, res) => {
   try {
     //data validation for id param
     if (!ObjectId.isValid(req.params.id)) {
-      res.status(400).json('Must use a valid friend id to find a friend.');
+      res.status(400).json('Must use a valid book id to find a book.');
       return;
     }
-    const friendId = new ObjectId(req.params.id);
+    const bookId = new ObjectId(req.params.id);
     mongodb
       .getDb()
       .db()
-      .collection('friends')
-      .find({ _id: friendId })
+      .collection('books')
+      .find({ _id: bookId })
       .toArray((err, result) => {
         //error handling
         if (err) {
@@ -47,72 +47,78 @@ const getSingle = async (req, res) => {
   }
 };
 
-const createFriend = async (req, res) => {
-    const friend = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        favoriteColor: req.body.favoriteColor,
-        birthday: req.body.birthday
+const createBook = async (req, res) => {
+    const book = {
+        title: req.body.title,
+        author: req.body.author,
+        genre: req.body.genre,
+        publishedYear: req.body.publishedYear,
+        language: req.body.language,
+        pages: req.body.pages,
+        available: req.body.available,
+        summary: req.body.summary
     };
     try {
-        const response = await mongodb.getDb().db().collection('friends').insertOne(friend);
+        const response = await mongodb.getDb().db().collection('books').insertOne(book);
         //error handling
         if (response.acknowledged) {
             res.status(201).json(response);
         } else {
-            res.status(500).json(response.error || 'Some error occurred while creating the friend.');
+            res.status(500).json(response.error || 'Some error occurred while creating the book.');
         }
     } catch (err) {
         res.status(500).json({ message: err });
     }
 };
 
-const updateFriend = async (req, res) => {
+const updateBook = async (req, res) => {
     //data validation for id param
     if (!ObjectId.isValid(req.params.id)) {
-        res.status(400).json('Must use a valid friend id to update a friend.');
+        res.status(400).json('Must use a valid book id to update a book.');
         return;
     }
-    const friendId = new ObjectId(req.params.id);
-    const friend = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        favoriteColor: req.body.favoriteColor,
-        birthday: req.body.birthday
+    const bookId = new ObjectId(req.params.id);
+    const book = {
+        title: req.body.title,
+        author: req.body.author,
+        genre: req.body.genre,
+        publishedYear: req.body.publishedYear,
+        language: req.body.language,
+        pages: req.body.pages,
+        available: req.body.available,
+        summary: req.body.summary
     };
     try {
         const response = await mongodb
             .getDb()
             .db()
-            .collection('friends')
-            .replaceOne({ _id: friendId }, friend);
+            .collection('books')
+            .replaceOne({ _id: bookId }, book);
         //error handling
         if (response.modifiedCount > 0) {
             res.status(204).send();
         } else {
-            res.status(500).json(response.error || 'Some error occurred while updating the friend.');
+            res.status(500).json(response.error || 'Some error occurred while updating the book.');
         }
     } catch (err) {
         res.status(500).json({ message: err });
     }
 };
 
-const deleteFriend = async (req, res) => {
+const deleteBook = async (req, res) => {
     //data validation for id param
     if (!ObjectId.isValid(req.params.id)) {
-        res.status(400).json('Must use a valid friend id to delete a friend.');
+        res.status(400).json('Must use a valid book id to delete a book.');
         return;
     }
-    const friendId = new ObjectId(req.params.id);
+    const bookId = new ObjectId(req.params.id);
     try {
-        const response = await mongodb.getDb().db().collection('friends').deleteOne({ _id: friendId });
+        const response = await mongodb.getDb().db().collection('books').deleteOne({ _id: bookId });
         //error handling
         if (response.deletedCount > 0) {
             res.status(204).send();
         } else {
-            res.status(500).json(response.error || 'Some error occurred while deleting the friend.');
+            res.status(500).json(response.error || 'Some error occurred while deleting the book.');
         }
     } catch (err) {
         res.status(500).json({ message: err });
@@ -122,7 +128,7 @@ const deleteFriend = async (req, res) => {
 module.exports = {
     getAll,
     getSingle,
-    createFriend,
-    updateFriend,
-    deleteFriend
+    createBook,
+    updateBook,
+    deleteBook
 };

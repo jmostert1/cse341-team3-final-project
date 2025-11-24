@@ -25,8 +25,8 @@ router.get('/github/callback', passport.authenticate('github', {
   res.redirect('/');
 });
 
-router.use('/friends', require('./friends'));
-router.use('/students', require('./students'));
+router.use('/books', require('./books'));
+router.use('/authors', require('./authors'));
 
 
 

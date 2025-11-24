@@ -6,7 +6,7 @@ const getAll = async (req, res) => {
     mongodb
       .getDb()
       .db()
-      .collection('students')
+      .collection('authors')
       .find()
       .toArray((err, lists) => {
         //error handling
@@ -25,15 +25,15 @@ const getSingle = async (req, res) => {
   try {
     //data validation for id param
     if (!ObjectId.isValid(req.params.id)) {
-      res.status(400).json('Must use a valid student id to find a student.');
+      res.status(400).json('Must use a valid author id to find an author.');
       return;
     }
-    const studentId = new ObjectId(req.params.id);
+    const authorId = new ObjectId(req.params.id);
     mongodb
       .getDb()
       .db()
-      .collection('students')
-      .find({ _id: studentId })
+      .collection('authors')
+      .find({ _id: authorId })
       .toArray((err, result) => {
         //error handling
         if (err) {
@@ -47,78 +47,72 @@ const getSingle = async (req, res) => {
   }
 };
 
-const createStudent = async (req, res) => {
-  const student = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    favoriteColor: req.body.favoriteColor,
-    birthday: req.body.birthday,
-    age: req.body.age,
-    gender: req.body.gender,
-    grade_level: req.body.grade_level
+const createAuthor = async (req, res) => {
+  const author = {
+    name: req.body.name,
+    birthYear: req.body.birthYear,
+    nationality: req.body.nationality,
+    awards: req.body.awards,
+    numBooksWritten: req.body.numBooksWritten
   };
   try {
-    const response = await mongodb.getDb().db().collection('students').insertOne(student);
+    const response = await mongodb.getDb().db().collection('authors').insertOne(author);
     //error handling
     if (response.acknowledged) {
       res.status(201).json(response);
     } else {
-      res.status(500).json(response.error || 'Some error occurred while creating the student.');
+      res.status(500).json(response.error || 'Some error occurred while creating the author.');
     }
   } catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
-const updateStudent = async (req, res) => {
+const updateAuthor = async (req, res) => {
     //data validation for id param
   if (!ObjectId.isValid(req.params.id)) {
-    res.status(400).json('Must use a valid student id to update a student.');
+    res.status(400).json('Must use a valid author id to update an author.');
     return;
   }
-  const studentId = new ObjectId(req.params.id);
-  const student = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    email: req.body.email,
-    favoriteColor: req.body.favoriteColor,
-    birthday: req.body.birthday,
-    age: req.body.age,
-    gender: req.body.gender,
-    grade_level: req.body.grade_level
+  const authorId = new ObjectId(req.params.id);
+  const author = {
+    name: req.body.name,
+    birthYear: req.body.birthYear,
+    nationality: req.body.nationality,
+    awards: req.body.awards,
+    numBooksWritten: req.body.numBooksWritten
   };
   try {
     const response = await mongodb
       .getDb()
       .db()
-      .collection('students')
-      .replaceOne({ _id: studentId }, student);
+      .collection('authors')
+      .replaceOne({ _id: authorId }, author);
       //error handling
     if (response.modifiedCount > 0) {
       res.status(204).send();
     } else {
-      res.status(500).json(response.error || 'Some error occurred while updating the student.');
+      res.status(500).json(response.error || 'Some error occurred while updating the author.');
     }
   } catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
-const deleteStudent = async (req, res) => {
+const deleteAuthor = async (req, res) => {
     //data validation for id param
   if (!ObjectId.isValid(req.params.id)) {
-    res.status(400).json('Must use a valid student id to delete a student.');
+    res.status(400).json('Must use a valid author id to delete an author.');
     return;
   }
-  const studentId = new ObjectId(req.params.id);
+  const authorId = new ObjectId(req.params.id);
   try {
-    const response = await mongodb.getDb().db().collection('students').deleteOne({ _id: studentId });
+    const response = await mongodb.getDb().db().collection('authors').deleteOne({ _id: authorId });
     //error handling
     if (response.deletedCount > 0) {
       res.status(204).send();
     } else {
-      res.status(500).json(response.error || 'Some error occurred while deleting the student.');
+      res.status(500).json(response.error || 'Some error occurred while deleting the author.');
     }
   } catch (err) {
     res.status(500).json({ message: err });
@@ -128,7 +122,7 @@ const deleteStudent = async (req, res) => {
 module.exports = {
   getAll,
   getSingle,
-  createStudent,
-  updateStudent,
-  deleteStudent
+  createAuthor,
+  updateAuthor,
+  deleteAuthor
 };
