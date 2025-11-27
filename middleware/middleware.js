@@ -45,14 +45,48 @@ const saveAuthor = (req, res, next) => {
   });
 };
 
-//Stores
+const saveStore = (req, res, next) => {
+  const validationRule = {
+    location: 'required|string',
+    owner: 'required|string',
+    employees: 'required|integer'
+  };
+  validator(req.body, validationRule, {}, (err, status) => {
+    if (!status) {
+      res.status(400).send({
+        success: false,
+        message: 'Validation failed',
+        data: err
+      });
+    } else {
+      next();
+    }
+  });
+};
 
-
-
-
-///Customers
+const saveCustomer = (req, res, next) => {
+  const validationRule = {
+    fullName: 'required|string',
+    address: 'required|string',
+    email: 'required|email',
+    phoneNumber: 'required|string'
+  };
+  validator(req.body, validationRule, {}, (err, status) => {
+    if (!status) {
+      res.status(400).send({
+        success: false,
+        message: 'Validation failed',
+        data: err
+      });
+    } else {
+      next();
+    }
+  });
+};
 
 module.exports = {
   saveBook,
-  saveAuthor
+  saveAuthor,
+  saveStore,
+  saveCustomer
 };
