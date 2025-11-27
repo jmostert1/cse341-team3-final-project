@@ -7,9 +7,12 @@ router.get('/', (req, res) => {
 });
 
 //login/logout routes
-router.get('/login', passport.authenticate('github'), (req, res) => {});
+router.get('/login', passport.authenticate('github'), (req, res) => {
+  // #swagger.ignore = true
+});
 
 router.get('/logout', function(req, res, next) {
+  // #swagger.ignore = true
   req.logout(function(err) {
     if (err) { return next(err); }
     res.redirect('/');
@@ -21,6 +24,7 @@ router.get('/github/callback', passport.authenticate('github', {
   session: false
 }),
 (req, res) => {
+  // #swagger.ignore = true
   req.session.user = req.user;
   res.redirect('/');
 });
